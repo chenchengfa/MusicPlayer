@@ -33,8 +33,10 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 	private boolean isCollect = false;
 	private int isFavorite;
 	private SQLiteDatabase mDb;
-	//从'我喜欢'中得到的地址，或从服务中得到的
-	private String mPath="";
+	// 从'我喜欢'中得到的地址，或从服务中得到的
+	private String mPath = "";
+	// 播放模式
+	private int mode = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		mSeekBar.setOnSeekBarChangeListener(new MySeekBarListener());
 		MySqlite mySqlite = new MySqlite(this);
 		mDb = mySqlite.getReadableDatabase();
-		 getData();
+		getData();
 	}
 
 	// 获取'我喜欢'传递过来的数据
@@ -113,7 +115,6 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		}
 	};
 
-
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -132,15 +133,15 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		//退出时，解绑
+		// 退出时，解绑
 		unbindService(conn);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		
+
 	}
 
 	@Override
@@ -151,7 +152,7 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 			// 当第一次播放时,执行playMusic，refresh更新进度条
 			if (isFirst) {
 				mPlay.setImageResource(R.drawable.ic_pause);
-				//从服务中得到音乐地址
+				// 从服务中得到音乐地址
 				mPath = mBinder.getPath();
 				mBinder.playMusic(mPath);
 				refresh();
@@ -190,6 +191,32 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 				mImageIlike.setImageResource(R.drawable.record_card_like_h);
 			}
 			break;
+		// 设置播放模式
+		case R.id.imageMode:
+			setMode();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void setMode() {
+		mode++;
+		mode = mode % 3;
+		switch (mode) {
+		// 循环
+		case 1:
+
+			break;
+		// 单曲
+		case 2:
+
+			break;
+		// 随机
+		case 3:
+
+			break;
+
 		default:
 			break;
 		}
