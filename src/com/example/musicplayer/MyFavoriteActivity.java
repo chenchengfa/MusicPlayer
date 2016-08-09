@@ -93,7 +93,9 @@ public class MyFavoriteActivity extends Activity implements OnItemClickListener 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 			Intent intent = new Intent(MyFavoriteActivity.this,PlayMusicActivity.class);
+			//bug : positon与表中的不对应
 			Music music = dataList.get(position);
+			//传递相应音乐的musicUrl
 			intent.putExtra("musicUrl", music.musicUrl);
 			startActivity(intent );
 	}

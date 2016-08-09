@@ -33,6 +33,8 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 	private boolean isCollect = false;
 	private int isFavorite;
 	private SQLiteDatabase mDb;
+	//从'我喜欢'中得到的地址，或从服务中得到的
+	private String mPath="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +50,13 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		mSeekBar.setOnSeekBarChangeListener(new MySeekBarListener());
 		MySqlite mySqlite = new MySqlite(this);
 		mDb = mySqlite.getReadableDatabase();
-		// getData();
+		 getData();
 	}
 
 	// 获取'我喜欢'传递过来的数据
 	private void getData() {
 		Intent intent = getIntent();
-
-		// path = intent.getStringExtra("musicUrl");
+		mPath = intent.getStringExtra("musicUrl");
 	}
 
 	@Override
@@ -112,6 +113,7 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		}
 	};
 
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -127,10 +129,18 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		//退出时，解绑
 		unbindService(conn);
-
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
 	}
 
 	@Override
@@ -141,8 +151,9 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 			// 当第一次播放时,执行playMusic，refresh更新进度条
 			if (isFirst) {
 				mPlay.setImageResource(R.drawable.ic_pause);
-				String path = mBinder.getPath();
-				mBinder.playMusic(path);
+				//从服务中得到音乐地址
+				mPath = mBinder.getPath();
+				mBinder.playMusic(mPath);
 				refresh();
 				Log.e("", "isFirst---playMusic");
 				// 重置isFirst标识位
