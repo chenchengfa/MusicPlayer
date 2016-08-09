@@ -8,50 +8,44 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-    
-    <activity
-            android:name="com.example.musicplayer.GuideActivity"
-           >
+        <activity android:name="com.example.musicplayer.GuideActivity" >
         </activity>
-            <activity
-            android:name="com.example.musicplayer.Main2Activity"
-           >
+        <activity android:name="com.example.musicplayer.Main2Activity" >
         </activity>
-            <activity
-            android:name="com.example.musicplayer.MyFavoriteActivity"
-           >
+        <activity android:name="com.example.musicplayer.MyFavoriteActivity" >
         </activity>
-            <activity
-            android:name="com.example.musicplayer.OnlineActivity"
-           >
+        <activity android:name="com.example.musicplayer.PlayMusicActivity" >
         </activity>
-            <activity
-            android:name="com.example.musicplayer.RecentEditActivity"
-           >
+        <activity android:name="com.example.musicplayer.OnlineActivity" >
         </activity>
-            <activity
-            android:name="com.example.musicplayer.RecentPlayActivity"
-           >
+        <activity android:name="com.example.musicplayer.RecentEditActivity" >
         </activity>
-            <activity
-            android:name="com.example.musicplayer.SplashActivity"
-           >
+        <activity android:name="com.example.musicplayer.RecentPlayActivity" >
         </activity>
-         <activity
+        <activity android:name="com.example.musicplayer.SplashActivity" >
+        </activity>
+        <activity
             android:name="com.example.musicplayer.MainActivity"
-             android:label="@string/app_name" 
-           >
-              <intent-filter>
+            android:label="@string/app_name" >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="com.example.musicplayer.MyService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>

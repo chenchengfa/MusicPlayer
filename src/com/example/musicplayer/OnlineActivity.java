@@ -45,7 +45,7 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 	 String path = "http://ob7ysmkjg.bkt.clouddn.com/qiniu_musics.txt";
 	private ListView listView;
 	private MyAdapter mAdapter;
-	private MyService mBinder;
+	private MyService mBinder=null;
 	 
 	
 	private ServiceConnection conn = new ServiceConnection() {
@@ -67,23 +67,25 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_online);
-		listView = (ListView) findViewById(R.id.listView1);
+		Intent service = new Intent(OnlineActivity.this, MyService.class);
+		startService(service);
+		bindService(service, conn, Context.BIND_AUTO_CREATE);
+		
 		mTimeOut = (TextView) findViewById(R.id.timeOut);
 		mBar = (ProgressBar) findViewById(R.id.progressBar1);
-		listView.setOnItemClickListener(this);
-		FileAsync fileAsync = new FileAsync();
-		fileAsync.execute(path);
+		listView = (ListView) findViewById(R.id.listView1);
 		mAdapter = new MyAdapter();
 		listView.setAdapter(mAdapter);
-
+		listView.setOnItemClickListener(this);
+		
+		FileAsync fileAsync = new FileAsync();
+		fileAsync.execute(path);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Intent service = new Intent(OnlineActivity.this, MyService.class);
-		startService(service);
-		bindService(service, conn, Context.BIND_AUTO_CREATE);
+		
 	}
 
 	@Override
@@ -202,7 +204,9 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 			// 将下载完的图片保存HashMap中
 			imageMap.put(mPosition, result);
 			// 将下载完的图片保存到服务中，用于其它界面使用
+			if (mBinder != null) {
 			mBinder.setImageMap(imageMap);
+			}
 			// 下载完图片，及时更新适配器
 			mAdapter.notifyDataSetChanged();
 		}
@@ -279,6 +283,7 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 
 		// 获取行点击对应的Music
 		Music music = musicList.get(position);
+		Log.e("", ""+music.musicName);
 		// 将得到的Music传入到服务中
 		mBinder.setMusic(music);
 		// 行点击时，设置下标到服务中
