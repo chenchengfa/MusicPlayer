@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/indicator1"
+        android:layout_width="5dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="#6600ff00"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/musicRecent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/indicator1"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/indicator1"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/signerRecent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/indicator1"
+        android:layout_alignLeft="@+id/musicRecent"
+        android:layout_marginLeft="18dp"
+        android:text="TextView" />
+
+</RelativeLayout>
