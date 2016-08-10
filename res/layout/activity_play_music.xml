@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#66123456"
+    android:background="#99123456"
     tools:context=".PlayMusicActivity" >
 
     <ImageView
@@ -34,15 +34,6 @@
         android:layout_alignRight="@+id/seekBar1"
         android:text="03:40" />
 
-    <ImageView
-        android:id="@+id/imageIlike"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/mStartTime"
-        android:layout_marginBottom="87dp"
-        android:src="@drawable/record_card_like_h" />
-
     <SeekBar
         android:id="@+id/seekBar1"
         android:layout_width="match_parent"
@@ -51,20 +42,29 @@
         android:layout_alignParentLeft="true" />
 
     <ImageView
+        android:id="@+id/imageIlike"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignRight="@+id/mStartTime"
+        android:layout_below="@+id/imagePlay"
+        android:layout_marginTop="58dp"
+        android:src="@drawable/record_card_like_h" />
+
+    <ImageView
+        android:id="@+id/imageMode"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/imageIlike"
+        android:layout_marginLeft="19dp"
+        android:layout_toRightOf="@+id/imageIlike"
+        android:src="@drawable/player_btn_repeat_normal" />
+
+    <ImageView
         android:id="@+id/imagePlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_play" />
-
-    <ImageView
-        android:id="@+id/imageMode"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignTop="@+id/imageIlike"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/imageIlike"
-        android:src="@drawable/player_btn_repeat_normal" />
     
 </RelativeLayout>

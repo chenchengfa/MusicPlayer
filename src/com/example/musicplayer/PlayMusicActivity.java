@@ -48,6 +48,8 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		mPlay.setOnClickListener(this);
 		mImageIlike = (ImageView) findViewById(R.id.imageIlike);
 		mImageIlike.setOnClickListener(this);
+		mImageMode = (ImageView) findViewById(R.id.imageMode);
+		mImageMode.setOnClickListener(this);
 		mSeekBar = (SeekBar) findViewById(R.id.seekBar1);
 		mSeekBar.setOnSeekBarChangeListener(new MySeekBarListener());
 		MySqlite mySqlite = new MySqlite(this);
@@ -114,6 +116,7 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+	private ImageView mImageMode;
 
 	@Override
 	protected void onPause() {
@@ -193,28 +196,37 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 			break;
 		// 设置播放模式
 		case R.id.imageMode:
-			setMode();
+			chanceMode();
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void setMode() {
+	private void chanceMode() {
 		mode++;
 		mode = mode % 3;
 		switch (mode) {
 		// 循环
-		case 1:
-
+		case 0:
+			//更改图片
+			mImageMode.setImageResource(R.drawable.player_btn_repeat_normal);
+			//保存到服务中
+			mBinder.setMode(mode);
 			break;
 		// 单曲
-		case 2:
-
+		case 1:
+			//更改图片
+			mImageMode.setImageResource(R.drawable.player_btn_repeatone_normal);
+			//保存到服务中
+			mBinder.setMode(mode);
 			break;
 		// 随机
-		case 3:
-
+		case 2:
+			//更改图片
+			mImageMode.setImageResource(R.drawable.player_btn_random_normal);
+			//保存到服务中
+			mBinder.setMode(mode);
 			break;
 
 		default:

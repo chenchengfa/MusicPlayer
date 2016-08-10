@@ -280,7 +280,8 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-
+		//将存放音乐列表的容器传到服务中
+		mBinder.setMusicList(musicList);
 		// 获取行点击对应的Music
 		Music music = musicList.get(position);
 		Log.e("", ""+music.musicName);
