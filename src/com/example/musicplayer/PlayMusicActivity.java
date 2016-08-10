@@ -32,6 +32,8 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 	private TextView mStartTime;
 	private Runnable mAction;
 	private ImageView mImageIlike;
+	private ImageView mImagePlayUp;
+	private ImageView mImagePlayDown;
 	private boolean isCollect = false;
 	private int isFavorite;
 	private SQLiteDatabase mDb;
@@ -53,6 +55,10 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		mImageIlike.setOnClickListener(this);
 		mImageMode = (ImageView) findViewById(R.id.imageMode);
 		mImageMode.setOnClickListener(this);
+		mImagePlayUp = (ImageView) findViewById(R.id.imagePlayUp);
+		mImagePlayUp.setOnClickListener(this);
+		mImagePlayDown = (ImageView) findViewById(R.id.imagePlayDown);
+		mImagePlayDown.setOnClickListener(this);
 		mSeekBar = (SeekBar) findViewById(R.id.seekBar1);
 		mSeekBar.setOnSeekBarChangeListener(new MySeekBarListener());
 		MySqlite mySqlite = new MySqlite(this);
@@ -121,6 +127,7 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 	};
 
 
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -137,7 +144,6 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 		// 退出时，解绑
 		unbindService(conn);
@@ -145,7 +151,6 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 
 	}
@@ -201,6 +206,16 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		case R.id.imageMode:
 			chanceMode();
 			break;
+		case R.id.imagePlayUp:
+			mBinder.playUpMusic();
+			// 将更新的播放状态，重新保存到服务中
+			mBinder.setIsPlay(isPlay);
+			break;
+		case R.id.imagePlayDown:
+			mBinder.playUpMusic();
+			// 将更新的播放状态，重新保存到服务中
+			mBinder.setIsPlay(isPlay);
+			break;
 		default:
 			break;
 		}
@@ -214,8 +229,6 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		case 0:
 			//更改图片
 			mImageMode.setImageResource(R.drawable.player_btn_repeat_normal);
-			//保存到服务中
-			mBinder.setMode(mode);
 			//通知显示
 			showToast("已切换到自动播放");
 			break;
@@ -223,23 +236,20 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		case 1:
 			//更改图片
 			mImageMode.setImageResource(R.drawable.player_btn_repeatone_normal);
-			//保存到服务中
-			mBinder.setMode(mode);
 			showToast("已切换到单曲循环");
 			break;
 		// 随机
 		case 2:
 			//更改图片
 			mImageMode.setImageResource(R.drawable.player_btn_random_normal);
-			//保存到服务中
-			mBinder.setMode(mode);
 			showToast("已切换到随机播放");
 			Log.e("", ""+mode);
 			break;
-
 		default:
 			break;
 		}
+		//保存到服务中
+		mBinder.setMode(mode);
 	}
 
 	private void showToast(String msg) {

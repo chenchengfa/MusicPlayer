@@ -256,12 +256,24 @@ public class MyService extends Service {
 
 	// 播放下一首
 	public void playNextMusic() {
-
+		index++;
+		//当index大于列表长度时，置零
+		if(index>musicList.size()-1){
+			index = 0;
+		}
+		music = musicList.get(index);
+		MyService.this.playMusic(music.musicUrl);
 	}
 
 	// 播放上一首
 	public void playUpMusic() {
-
+		index--;
+		//当index小于0时，回到列表结尾
+		if(index<0){
+			index = musicList.size()-1;
+		}
+		music = musicList.get(index);
+		MyService.this.playMusic(music.musicUrl);
 	}
 
 	public boolean getIsFirst() {

@@ -66,5 +66,22 @@
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_play" />
+
+    <ImageView
+        android:id="@+id/imagePlayDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seekBar1"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/imagePlay"
+        android:src="@drawable/ic_playnext" />
+
+    <ImageView
+        android:id="@+id/imagePlayUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageMode"
+        android:layout_below="@+id/seekBar1"
+        android:src="@drawable/ic_playup" />
     
 </RelativeLayout>

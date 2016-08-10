@@ -102,7 +102,7 @@ public class RecentPlayActivity extends Activity implements OnItemClickListener,
 		registerReceiver(receiver, filter);
 		Intent service = new Intent(RecentPlayActivity.this, MyService.class);
 		startService(service);
-		bindService(service, conn, Context.MODE_APPEND);
+		bindService(service, conn, Context.MODE_PRIVATE);
 	}
 
 	@Override
@@ -185,8 +185,8 @@ public class RecentPlayActivity extends Activity implements OnItemClickListener,
 					mBinder.setIsPlay(true);
 				}
 			}
-			mAdapter.notifyDataSetChanged();
 		}
+		mAdapter.notifyDataSetChanged();
 		}
 
 	@Override
