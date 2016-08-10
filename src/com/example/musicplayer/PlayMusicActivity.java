@@ -10,11 +10,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.musicplayer.MyService.MyBinder;
 
@@ -37,7 +39,8 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 	private String mPath = "";
 	// 播放模式
 	private int mode = 0;
-
+	private ImageView mImageMode;
+	private Toast mToast;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -116,7 +119,7 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
-	private ImageView mImageMode;
+
 
 	@Override
 	protected void onPause() {
@@ -213,6 +216,8 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 			mImageMode.setImageResource(R.drawable.player_btn_repeat_normal);
 			//保存到服务中
 			mBinder.setMode(mode);
+			//通知显示
+			showToast("已切换到自动播放");
 			break;
 		// 单曲
 		case 1:
@@ -220,6 +225,7 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 			mImageMode.setImageResource(R.drawable.player_btn_repeatone_normal);
 			//保存到服务中
 			mBinder.setMode(mode);
+			showToast("已切换到单曲循环");
 			break;
 		// 随机
 		case 2:
@@ -227,11 +233,28 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 			mImageMode.setImageResource(R.drawable.player_btn_random_normal);
 			//保存到服务中
 			mBinder.setMode(mode);
+			showToast("已切换到随机播放");
+			Log.e("", ""+mode);
 			break;
 
 		default:
 			break;
 		}
+	}
+
+	private void showToast(String msg) {
+		if(mToast!=null){
+			mToast.cancel();
+		}
+		mToast = new Toast(PlayMusicActivity.this);
+		View view = getLayoutInflater().inflate(R.layout.toast_custom,null);
+		ImageView image = (ImageView) view.findViewById(R.id.imageToastCustom);
+		TextView tv1 = (TextView) view.findViewById(R.id.textToastCustom);
+		tv1.setText(msg);
+		mToast.setView(view);
+		mToast.setDuration(1000);
+		mToast.setGravity(Gravity.TOP, 0, 100);
+		mToast.show();
 	}
 
 	// 更新进度条，时间显示
