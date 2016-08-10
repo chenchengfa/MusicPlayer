@@ -107,6 +107,7 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = "";
+			InputStream  is=null;
 			try {
 				URL url = new URL(params[0]);
 				try {
@@ -115,16 +116,20 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 					conn.setConnectTimeout(5000);
 					//读取超时，服务端发送信息给客户端
 					conn.setReadTimeout(5000);
-					InputStream in = conn.getInputStream();
+					is = conn.getInputStream();
 					ByteArrayBuffer byteArray = new ByteArrayBuffer(1000);
 					byte[] buffer = new byte[1024];
-					int len = in.read(buffer);
+					int len = is.read(buffer);
 					while (-1 != len) {
 						byteArray.append(buffer, 0, len);
 						Log.e("", "bbb" + buffer);
-						len = in.read(buffer);
+						len = is.read(buffer);
 					}
 					result = new String(byteArray.toByteArray());
+					//当结果不为空时，返回结果；否则返回NUll
+					if(result !=null){
+						return result;
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 					//网络超时异常时，显示文体提示
@@ -139,8 +144,19 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
+			}finally{
+				//当存在输入流时，关流操作
+				if(is!=null){
+					try {
+						is.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
-			return result;
+			//当结果为空时，返回NUll
+			return null;
 		}
 
 		@Override
@@ -184,17 +200,33 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 		@Override
 		protected Bitmap doInBackground(String... params) {
 			Bitmap bitmap = null;
+			InputStream is=null;
 			try {
 				URL url = new URL(params[0]);
 				URLConnection conn = url.openConnection();
-				InputStream is = conn.getInputStream();
+				is = conn.getInputStream();
 				bitmap = BitmapFactory.decodeStream(is);
+				//当结果不为空时，返回结果；否则返回NUll
+				if(bitmap!=null){
+					return bitmap;
+				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			}finally{
+				//当存在输入流时，关流操作
+				if(is !=null){
+					try {
+						is.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
-			return bitmap;
+			//当结果为空时，返回NUll
+			return null;
 		}
 
 		@Override
