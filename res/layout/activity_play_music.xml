@@ -60,28 +60,29 @@
         android:src="@drawable/player_btn_repeat_normal" />
 
     <ImageView
-        android:id="@+id/imagePlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_play" />
-
-    <ImageView
         android:id="@+id/imagePlayDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/seekBar1"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/imagePlay"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="42dp"
+        android:layout_toLeftOf="@+id/mTotalTime"
         android:src="@drawable/ic_playnext" />
+
+    <ImageView
+        android:id="@+id/imagePlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imagePlayDown"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_play" />
 
     <ImageView
         android:id="@+id/imagePlayUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/imageMode"
-        android:layout_below="@+id/seekBar1"
+        android:layout_alignTop="@+id/imagePlay"
         android:src="@drawable/ic_playup" />
     
 </RelativeLayout>
