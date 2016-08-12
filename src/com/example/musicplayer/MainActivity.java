@@ -115,22 +115,34 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
-	class ImageAsync extends AsyncTask<String, Void, Bitmap>{
 
-		@Override
-		protected Bitmap doInBackground(String... params) {
-			Bitmap bitmap = null;
-			try {
-				URL url = new URL(params[0]);
-				InputStream is = url.openStream();
-				bitmap = BitmapFactory.decodeStream(is);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+		class ImageAsync extends AsyncTask<String, Void, Bitmap> {
+
+			@Override
+			protected Bitmap doInBackground(String... params) {
+				Bitmap bitmap = null;
+				 InputStream is = null;
+				try {
+					URL url = new URL(params[0]);
+					is = url.openStream();
+					bitmap = BitmapFactory.decodeStream(is);
+					return bitmap;
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}finally{
+					if(is !=null){
+						try {
+							is.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				return null;
 			}
-			return bitmap;
-		}
+			
 		@Override
 		protected void onPostExecute(Bitmap result) {
 			super.onPostExecute(result);

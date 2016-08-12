@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.example.customimageview.CircleImageView;
+
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -55,6 +57,7 @@ public class MyService extends Service {
 	}
 
 	private SQLiteDatabase mDb;
+
 
 	public MyService() {
 	}
@@ -155,6 +158,9 @@ public class MyService extends Service {
 					sendBroadcast(new Intent(
 							"android.action.broadcast.MyRecentPlay"));
 					// }
+					//发送广播，更新自定义图片
+					sendBroadcast(new Intent("android.action.broadcast.BeginingPlay"));
+					
 				}
 			});
 			//播放完监听方法

@@ -122,7 +122,6 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 					int len = is.read(buffer);
 					while (-1 != len) {
 						byteArray.append(buffer, 0, len);
-						Log.e("", "bbb" + buffer);
 						len = is.read(buffer);
 					}
 					result = new String(byteArray.toByteArray());
@@ -152,6 +151,7 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						Log.e("", "-------io error");
 					}
 				}
 			}
@@ -165,13 +165,11 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 				for (int i = 0; i < jsonArray.length(); i++) {
-					Log.e("", "ccc---" + i);
 					JSONObject json = jsonArray.getJSONObject(i);
 					String name = json.getString("name");
 					String imageURL = json.getString("imageURL");
 					String signer = json.getString("signer");
 					String songURL = json.getString("songURL");
-					Log.e("", "eee---" + songURL);
 					musicList.add(new Music(name, signer, imageURL, songURL,0));
 				}
 				//更新完成时，显示listView
@@ -212,8 +210,10 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
+				
 			} catch (IOException e) {
 				e.printStackTrace();
+				Log.e("", "-------io error3");
 			}finally{
 				//当存在输入流时，关流操作
 				if(is !=null){
@@ -222,6 +222,7 @@ public class OnlineActivity extends Activity implements OnItemClickListener {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						Log.e("", "-------io error2=====");
 					}
 				}
 			}

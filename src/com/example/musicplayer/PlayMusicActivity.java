@@ -1,12 +1,23 @@
 package com.example.musicplayer;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -18,6 +29,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.customimageview.CircleImageView;
+import com.example.musicplayer.MainActivity.ImageAsync;
 import com.example.musicplayer.MyService.MyBinder;
 
 public class PlayMusicActivity extends Activity implements OnClickListener {
@@ -43,12 +56,81 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 	private int mode = 0;
 	private ImageView mImageMode;
 	private Toast mToast;
+	private CircleImageView mCustom_image;
+	private TextView mMusicName;
+	private Music music = null;
+
+	// 每次开始播放时，使用广播来接收
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// 更新音乐名称、自定义ImageView图片
+			showCustomImage();
+		}
+	};
+
+	private void showCustomImage() {
+
+		music = mBinder.getMusic();
+		if (music != null) {
+			// 每次开始播放时，更新音乐名称
+			mMusicName.setText(music.musicName);
+			HashMap<Integer, Bitmap> mImageMap = mBinder.getImageMap();
+			// 从服务中获得图片集合index下标，不可
+			int index = mBinder.getIndex();
+			Bitmap bm = mImageMap.get(index);
+			if (bm == null) {
+				ImageAsync imageAsync = new ImageAsync();
+				imageAsync.execute(music.imageUrl);
+			} else {
+				// 更新到自定义ImageView上
+				mCustom_image.setImageBitmap(bm);
+			}
+		}
+	}
+
+	class ImageAsync extends AsyncTask<String, Void, Bitmap> {
+
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			Bitmap bitmap = null;
+			InputStream is = null;
+			try {
+				URL url = new URL(params[0]);
+				is = url.openStream();
+				bitmap = BitmapFactory.decodeStream(is);
+				return bitmap;
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (is != null) {
+					try {
+						is.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			super.onPostExecute(result);
+			mCustom_image.setImageBitmap(result);
+		}
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play_music);
 		mStartTime = (TextView) findViewById(R.id.mStartTime);
 		mTotalTime = (TextView) findViewById(R.id.mTotalTime);
+		mMusicName = (TextView) findViewById(R.id.textMusicName);
 		mPlay = (ImageView) findViewById(R.id.imagePlay);
 		mPlay.setOnClickListener(this);
 		mImageIlike = (ImageView) findViewById(R.id.imageIlike);
@@ -59,17 +141,20 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		mImagePlayUp.setOnClickListener(this);
 		mImagePlayDown = (ImageView) findViewById(R.id.imagePlayDown);
 		mImagePlayDown.setOnClickListener(this);
+		mCustom_image = (CircleImageView) findViewById(R.id.profile_image);
+		mCustom_image.setOnClickListener(this);
 		mSeekBar = (SeekBar) findViewById(R.id.seekBar1);
 		mSeekBar.setOnSeekBarChangeListener(new MySeekBarListener());
 		MySqlite mySqlite = new MySqlite(this);
 		mDb = mySqlite.getReadableDatabase();
 		getData();
+
 	}
 
 	// 获取'我喜欢'传递过来的数据
 	private void getData() {
 		Intent intent = getIntent();
-		mPath = intent.getStringExtra("musicUrl");
+		// mPath = intent.getStringExtra("musicUrl");
 	}
 
 	@Override
@@ -78,6 +163,10 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		Intent service = new Intent(PlayMusicActivity.this, MyService.class);
 		startService(service);
 		bindService(service, conn, Context.BIND_AUTO_CREATE);
+		// 注册广播，用于音乐名称、自定义图片更新
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("android.action.broadcast.BeginingPlay");
+		registerReceiver(receiver, filter);
 	}
 
 	ServiceConnection conn = new ServiceConnection() {
@@ -88,6 +177,9 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			mBinder = ((MyBinder) service).getSystem();
+			Log.e("", "showCustomImage");
+			// 更新音乐名称、自定义ImageView图片
+			showCustomImage();
 			isFirst = mBinder.getIsFirst();
 			isPlay = mBinder.getisPlay();
 			// 当从后台回来时，界面状态和之前一样
@@ -126,8 +218,6 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		}
 	};
 
-
-
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -147,6 +237,7 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		super.onStop();
 		// 退出时，解绑
 		unbindService(conn);
+		unregisterReceiver(receiver);
 	}
 
 	@Override
@@ -227,37 +318,38 @@ public class PlayMusicActivity extends Activity implements OnClickListener {
 		switch (mode) {
 		// 循环
 		case 0:
-			//更改图片
+			// 更改图片
 			mImageMode.setImageResource(R.drawable.player_btn_repeat_normal);
-			//通知显示
+			// 通知显示
 			showToast("已切换到自动播放");
 			break;
 		// 单曲
 		case 1:
-			//更改图片
+			// 更改图片
 			mImageMode.setImageResource(R.drawable.player_btn_repeatone_normal);
 			showToast("已切换到单曲循环");
 			break;
 		// 随机
 		case 2:
-			//更改图片
+			// 更改图片
 			mImageMode.setImageResource(R.drawable.player_btn_random_normal);
 			showToast("已切换到随机播放");
-			Log.e("", ""+mode);
+			Log.e("", "" + mode);
 			break;
 		default:
 			break;
 		}
-		//保存到服务中
+		// 保存到服务中
 		mBinder.setMode(mode);
 	}
 
+	// 自定义“播放模式”通知
 	private void showToast(String msg) {
-		if(mToast!=null){
+		if (mToast != null) {
 			mToast.cancel();
 		}
 		mToast = new Toast(PlayMusicActivity.this);
-		View view = getLayoutInflater().inflate(R.layout.toast_custom,null);
+		View view = getLayoutInflater().inflate(R.layout.toast_custom, null);
 		ImageView image = (ImageView) view.findViewById(R.id.imageToastCustom);
 		TextView tv1 = (TextView) view.findViewById(R.id.textToastCustom);
 		tv1.setText(msg);
