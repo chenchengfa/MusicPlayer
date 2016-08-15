@@ -91,5 +91,13 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="14dp"
         android:text="我喜欢" />
+
+    <Button
+        android:id="@+id/localSongBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/recentPlayBtn"
+        android:layout_alignLeft="@+id/myFavoriteBtn"
+        android:text="本地歌曲" />
    
 </RelativeLayout>

@@ -50,6 +50,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		mRecentPlay.setOnClickListener(this);
 		myFavoriteBtn = (Button) findViewById(R.id.myFavoriteBtn);
 		myFavoriteBtn.setOnClickListener(this);
+		mLocalSongBtn = (Button) findViewById(R.id.localSongBtn);
+		mLocalSongBtn.setOnClickListener(this);
 		mImagePlay = (ImageView) findViewById(R.id.imagePlay1);
 		mImagePlay.setOnClickListener(this);
 		mImageUrl = (ImageView) findViewById(R.id.imageUrl);
@@ -115,6 +117,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+	private Button mLocalSongBtn;
 
 		class ImageAsync extends AsyncTask<String, Void, Bitmap> {
 
@@ -166,6 +169,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		case R.id.myFavoriteBtn:
 			Intent intent3 = new Intent(MainActivity.this, MyFavoriteActivity.class);
 			startActivity(intent3);
+			break;
+		case R.id.localSongBtn:
+			Intent intent4 = new Intent(MainActivity.this,LocalSongActivity .class);
+			startActivity(intent4);
 			break;
 		case R.id.downRelativeLayout:
 			// 有音乐跳转，没有则不跳转

@@ -9,6 +9,7 @@
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -43,9 +44,13 @@
 
         <service
             android:name="com.example.musicplayer.MyService"
-            android:enabled="true"
-         >
+            android:enabled="true" >
         </service>
+
+        <activity
+            android:name="com.example.musicplayer.LocalSongActivity"
+            android:label="@string/title_activity_local_song" >
+        </activity>
     </application>
 
 </manifest>
